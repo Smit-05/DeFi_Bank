@@ -8,12 +8,12 @@ contract TokenFarm{
     string public name = "Dapp Token Farm";
     address public owner;
     DappToken public dappToken;
-    DaiToken public daiToken;
-
+    DaiToken public daiToken; 
     address[] public stakers;
     mapping(address => uint) public stakingBalance;
     mapping(address => bool) public hasStaked;
     mapping(address => bool) public isStaking;
+    mapping(address => uint) public time;
 
     constructor(DappToken _dappToken,DaiToken _daiToken) public {
         dappToken = _dappToken;
@@ -40,10 +40,11 @@ contract TokenFarm{
         //Staking status
         isStaking[msg.sender] = true;
         hasStaked[msg.sender] = true;
-
+        time[msg.sender] = block.timestamp;
 
     }
 
+    
     //Issuing Token
     function issueTokens() public {
 
@@ -63,7 +64,7 @@ contract TokenFarm{
 
         uint balance = stakingBalance[msg.sender];
         require(balance>0,"Balance cannot be zero");
-
+        
         daiToken.transfer(msg.sender, balance);
         stakingBalance[msg.sender] = 0;
         isStaking[msg.sender] = false;
